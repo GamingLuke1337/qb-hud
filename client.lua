@@ -711,18 +711,19 @@ CreateThread(function()
                 oxygen = GetPlayerUnderwaterTimeRemaining(playerId) * 10
             end
             -- Player hud
+            local talking = 0
             if GetResourceState(Config.TokoResource) == "started" then
-                talking = exports[Config.TokoResource]:getPlayerData(GetPlayerServerId(PlayerId()), "voip:talking") or 0
+               local talking = exports[Config.TokoResource]:getPlayerData(GetPlayerServerId(PlayerId()), "voip:talking") or 0
             else
-                talking = NetworkIsPlayerTalking(playerId)
+                local talking = NetworkIsPlayerTalking(playerId)
             end
 
             local voice = 0
             if GetResourceState(Config.TokoResource) == "started" then
-                voice = exports[Config.TokoResource]:getPlayerData(GetPlayerServerId(PlayerId()), "voip:mode") or 0
+                local voice = exports[Config.TokoResource]:getPlayerData(GetPlayerServerId(PlayerId()), "voip:mode") or 0
             else
                 if LocalPlayer.state['proximity'] then
-                    voice = LocalPlayer.state['proximity'].distance
+                   local voice = LocalPlayer.state['proximity'].distance
                 end
             end
             if IsPauseMenuActive() then
@@ -769,10 +770,11 @@ CreateThread(function()
                 showAltitude = true
                 showSeatbelt = false
             end
+            local radioChannel = 0
             if GetResourceState(Config.TokoResource) == "started" then
-                radioChannel = exports[Config.TokoResource]:getPlayerData(GetPlayerServerId(PlayerId()), "radio:channel") or 0
+                local radioChannel = exports[Config.TokoResource]:getPlayerData(GetPlayerServerId(PlayerId()), "radio:channel") or 0
             else
-                radioChannel = LocalPlayer.state['radioChannel']
+                local radioChannel = LocalPlayer.state['radioChannel']
             end
 
             if not (IsPedInAnyVehicle(player) and not IsThisModelABicycle(vehicle)) then
