@@ -27,6 +27,9 @@ local Menu = config.Menu
 local CinematicHeight = 0.2
 local w = 0
 local radioActive = false
+local talking = 0
+local radioChannel = 0
+local voice = 0
 
 DisplayRadar(false)
 
@@ -711,19 +714,17 @@ CreateThread(function()
                 oxygen = GetPlayerUnderwaterTimeRemaining(playerId) * 10
             end
             -- Player hud
-            local talking = 0
             if GetResourceState(Config.TokoResource) == "started" then
-               local talking = exports[Config.TokoResource]:getPlayerData(GetPlayerServerId(PlayerId()), "voip:talking") or 0
+               talking = exports[Config.TokoResource]:getPlayerData(GetPlayerServerId(PlayerId()), "voip:talking") or 0
             else
-                local talking = NetworkIsPlayerTalking(playerId)
+                talking = NetworkIsPlayerTalking(playerId)
             end
 
-            local voice = 0
             if GetResourceState(Config.TokoResource) == "started" then
-                local voice = exports[Config.TokoResource]:getPlayerData(GetPlayerServerId(PlayerId()), "voip:mode") or 0
+                voice = exports[Config.TokoResource]:getPlayerData(GetPlayerServerId(PlayerId()), "voip:mode") or 0
             else
                 if LocalPlayer.state['proximity'] then
-                   local voice = LocalPlayer.state['proximity'].distance
+                   voice = LocalPlayer.state['proximity'].distance
                 end
             end
             if IsPauseMenuActive() then
@@ -770,11 +771,10 @@ CreateThread(function()
                 showAltitude = true
                 showSeatbelt = false
             end
-            local radioChannel = 0
             if GetResourceState(Config.TokoResource) == "started" then
-                local radioChannel = exports[Config.TokoResource]:getPlayerData(GetPlayerServerId(PlayerId()), "radio:channel") or 0
+                radioChannel = exports[Config.TokoResource]:getPlayerData(GetPlayerServerId(PlayerId()), "radio:channel") or 0
             else
-                local radioChannel = LocalPlayer.state['radioChannel']
+                radioChannel = LocalPlayer.state['radioChannel']
             end
 
             if not (IsPedInAnyVehicle(player) and not IsThisModelABicycle(vehicle)) then
