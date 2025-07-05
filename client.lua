@@ -711,10 +711,19 @@ CreateThread(function()
                 oxygen = GetPlayerUnderwaterTimeRemaining(playerId) * 10
             end
             -- Player hud
-            local talking = NetworkIsPlayerTalking(playerId)
+            if GetResourceState(Config.TokoResource) == "started" then
+                talking = exports[Config.TokoResource]:getPlayerData(GetPlayerServerId(PlayerId()), "voip:talking") or 0
+            else
+                talking = NetworkIsPlayerTalking(playerId)
+            end
+
             local voice = 0
-            if LocalPlayer.state['proximity'] then
-                voice = LocalPlayer.state['proximity'].distance
+            if GetResourceState(Config.TokoResource) == "started" then
+                voice = exports[Config.TokoResource]:getPlayerData(GetPlayerServerId(PlayerId()), "voip:mode") or 0
+            else
+                if LocalPlayer.state['proximity'] then
+                    voice = LocalPlayer.state['proximity'].distance
+                end
             end
             if IsPauseMenuActive() then
                 show = false
@@ -739,6 +748,52 @@ CreateThread(function()
                     stress,
                     voice,
                     LocalPlayer.state['radioChannel'],
+                    talking,
+                    armed,
+                    oxygen,
+                    parachute,
+                    -1,
+                    cruiseOn,
+                    nitroActive,
+                    harness,
+                    hp,
+                    math.ceil(GetEntitySpeed(vehicle) * speedMultiplier),
+                    -1,
+                    Menu.isCinematicModeChecked,
+                    dev,
+                    radioActive,
+                })
+            end
+            -- Vehicle hud
+            if IsPedInAnyHeli(player) or IsPedInAnyPlane(player) then
+                showAltitude = true
+                showSeatbelt = false
+            end
+            if GetResourceState(Config.TokoResource) == "started" then
+                radioChannel = exports[Config.TokoResource]:getPlayerData(GetPlayerServerId(PlayerId()), "radio:channel") or 0
+            else
+                radioChannel = LocalPlayer.state['radioChannel']
+            end
+
+            if not (IsPedInAnyVehicle(player) and not IsThisModelABicycle(vehicle)) then
+                updatePlayerHud({
+                    show,
+                    Menu.isDynamicHealthChecked,
+                    Menu.isDynamicArmorChecked,
+                    Menu.isDynamicHungerChecked,
+                    Menu.isDynamicThirstChecked,
+                    Menu.isDynamicStressChecked,
+                    Menu.isDynamicOxygenChecked,
+                    Menu.isDynamicEngineChecked,
+                    Menu.isDynamicNitroChecked,
+                    GetEntityHealth(player) - 100,
+                    playerDead,
+                    GetPedArmour(player),
+                    thirst,
+                    hunger,
+                    stress,
+                    voice,
+                    radioChannel,
                     talking,
                     armed,
                     oxygen,
@@ -786,7 +841,7 @@ CreateThread(function()
                     hunger,
                     stress,
                     voice,
-                    LocalPlayer.state['radioChannel'],
+                    radioChannel,
                     talking,
                     armed,
                     oxygen,
